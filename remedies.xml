@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CropDatabase>
+    <Disease id="0">
+        <Name>Tomato Early Blight</Name>
+        <Remedy>
+            <Organic>Remove lower infected leaves. Apply copper-based fungicide spray early in the morning.</Organic>
+            <Chemical>Spray Mancozeb 75% WP at 2 grams per liter of water.</Chemical>
+        </Remedy>
+    </Disease>
+    <Disease id="1">
+        <Name>Potato Early Blight</Name>
+        <Remedy>
+            <Organic>Ensure proper crop rotation. Apply Neem oil spray to prevent spreading.</Organic>
+            <Chemical>Apply Chlorothalonil fungicide according to package instructions.</Chemical>
+        </Remedy>
+    </Disease>
+    <Disease id="2">
+        <Name>Healthy Crop</Name>
+        <Remedy>
+            <Organic>Maintain current watering schedule. No action needed.</Organic>
+            <Chemical>None required.</Chemical>
+        </Remedy>
+    </Disease>
+</CropDatabase>
