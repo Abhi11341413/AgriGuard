@@ -26,8 +26,7 @@ def load_model():
 
 model = load_model()
 db = TinyDB('agri_data.json')
-genai.configure(api_key="AIzaSyDgZE0JoqOZXkpWmc_Lgn4274fd05wPc-Y") 
-
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 # --- 3. SIDEBAR NAVIGATION ---
 st.sidebar.title("AgriGuard OS")
 st.sidebar.caption("Federated Edge AI System")

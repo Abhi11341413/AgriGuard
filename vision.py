@@ -10,8 +10,7 @@ def calculate_disease_severity(image):
     total_image_pixels = img_array.shape[0] * img_array.shape[1]
 
     # --- 1. RELAXED GREEN MASK ---
-    # Lowered Hue to 35 to catch the yellowish-green transition zones.
-    # Lowered Saturation to 50 to catch sun glare / washed out areas on the leaf.
+   
     lower_green = np.array([35, 50, 40])
     upper_green = np.array([85, 255, 255])
     green_mask = cv2.inRange(hsv, lower_green, upper_green)
@@ -38,8 +37,6 @@ def calculate_disease_severity(image):
         return -1.0, "Not a Leaf"
 
     # 2. The Face/Desk Trap: Dropped from 10% to 2%.
-    # Highly severe diseases like Late Blight can destroy 95%+ of a leaf.
-    # We only want to block objects that are mathematically 98%+ brown/orange (like faces).
     if healthy_pixels < (0.02 * total_plant_pixels):
          return -1.0, "Not a Leaf"
 

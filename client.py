@@ -28,7 +28,7 @@ print(f"Loading images from: {data_folder}")
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
-    # CRITICAL: MobileNetV2 requires these exact numbers to see colors correctly
+  
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) 
 ])
 
@@ -65,7 +65,6 @@ for path, local_label in dataset.samples:
 dataset.samples = new_samples
 dataset.targets = new_targets
 
-# High-Speed Windows Dataloader
 train_loader = DataLoader(
     dataset, 
     batch_size=32, 
@@ -77,7 +76,7 @@ train_loader = DataLoader(
 # --- 5. LOAD THE AI BRAIN ---
 model = SimpleLeafNet(num_classes=15).to(device)
 criterion = nn.CrossEntropyLoss()
-# Scalpel speed learning rate to protect the un-frozen layers
+
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
 # --- 6. THE FEDERATED LEARNING LOGIC ---
@@ -96,10 +95,10 @@ class AgriGuardClient(fl.client.NumPyClient):
         print(f"Training AI on {len(dataset)} local leaf images...")
         
         model.train()
-        # Fast Federated Loop: 5 local epochs per round for DEEP learning
+        
         for epoch in range(5):
             for images, labels in train_loader:
-                # Send the batch of images to the fast hardware
+              
                 images, labels = images.to(device), labels.to(device)
                 
                 optimizer.zero_grad()

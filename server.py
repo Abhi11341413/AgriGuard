@@ -9,6 +9,6 @@ print("Starting AgriGuard Central Server... Waiting for farmers to connect.")
 
 fl.server.start_server(
     server_address="127.0.0.1:8080",
-    config=fl.server.ServerConfig(num_rounds=20), # <--- Changed to 20 rounds!
+    config=fl.server.ServerConfig(num_rounds=20), 
     strategy=strategy
 )
