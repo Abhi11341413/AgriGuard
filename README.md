@@ -51,7 +51,6 @@ Clone the repository and navigate to the project directory:
 git clone <your-repo-link>
 cd AgriGuard_Submission
 
-
 Install the required dependencies:
 
 pip install -r requirements.txt
