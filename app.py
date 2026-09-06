@@ -3,9 +3,9 @@ import torch
 import torchvision.transforms as transforms
 from PIL import Image
 from tinydb import TinyDB, Query
-import google.generativeai as genai
 import pandas as pd
 import numpy as np
+from mistralai.client import Mistral
 
 from model import SimpleLeafNet
 from vision import calculate_disease_severity
@@ -26,7 +26,8 @@ def load_model():
 
 model = load_model()
 db = TinyDB('agri_data.json')
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+client = Mistral(api_key=st.secrets["MISTRAL_API_KEY"])
+
 # --- 3. SIDEBAR NAVIGATION ---
 st.sidebar.title("AgriGuard OS")
 st.sidebar.caption("Federated Edge AI System")
@@ -131,14 +132,18 @@ if page == "🔍 Field Diagnosis":
             # --- AI AGENT PRESCRIPTION ---
             st.markdown("### 🤖 Agentic AI Prescription")
             
-            # If we don't have a prescription in memory, ask Gemini for one
+            # If we don't have a prescription in memory, ask Mistral for one
             if st.session_state.prescription is None:
                 with st.spinner("Agent is reasoning..."):
                     try:
-                        agent_model = genai.GenerativeModel('gemini-2.5-flash')
                         p_text = f"Expert Advice for {res['name']} at {res['severity_pct']}% severity. Organic: {res['organic']}. Chemical: {res['chemical']}."
-                        response = agent_model.generate_content(p_text)
-                        st.session_state.prescription = response.text # Save to memory!
+                        response = client.chat.complete(
+                            model="mistral-large-latest",
+                            messages=[
+                                {"role": "user", "content": p_text}
+                            ]
+                        )
+                        st.session_state.prescription = response.choices[0].message.content # Save to memory!
                         st.success(st.session_state.prescription)
                     except Exception as e:
                         # PRESENTATION ARMOR: Fallback text if the API hits the Quota
@@ -171,10 +176,14 @@ if page == "🔍 Field Diagnosis":
                 message_placeholder = st.empty()
                 secret_context = f"You are an expert AI Agronomist talking to a farmer in India. Crop: {disease_name}. Question: '{prompt}' Answer clearly and professionally under 3 short paragraphs."
                 try:
-                    agent_model = genai.GenerativeModel('gemini-2.5-flash')
-                    chat_response = agent_model.generate_content(secret_context)
-                    message_placeholder.markdown(chat_response.text)
-                    st.session_state.messages.append({"role": "assistant", "content": chat_response.text})
+                    chat_response = client.chat.complete(
+                        model="mistral-large-latest",
+                        messages=[
+                            {"role": "user", "content": secret_context}
+                        ]
+                    )
+                    message_placeholder.markdown(chat_response.choices[0].message.content)
+                    st.session_state.messages.append({"role": "assistant", "content": chat_response.choices[0].message.content})
                 except Exception as e:
                     # PRESENTATION ARMOR: Chatbot fallback
                     fallback_msg = "I am currently operating in offline edge-mode to save bandwidth. Please refer to the standard treatment protocols listed above."

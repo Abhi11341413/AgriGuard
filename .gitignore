@@ -4,3 +4,4 @@ dataset/
 *.pth
 # Ignore Python junk files
 __pycache__/
+.streamlit/
